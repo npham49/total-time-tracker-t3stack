@@ -39,8 +39,14 @@ const Dashboard = () => {
   const deleteHandler = (id: string) => {
     const result = confirm("Are you sure you want to delete this time stamp?");
     if (result) {
-      deleteTimeStamp.mutate({ id: id });
-      window.location.reload();
+      deleteTimeStamp.mutateAsync({ id: id })
+      .then(() => {
+        alert("Time stamp deleted");
+        window.location.reload();
+      })
+      .catch((err) => {
+        alert(err);
+      })
     }
   };
   const shareHandler = () => {

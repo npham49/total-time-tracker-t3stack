@@ -22,14 +22,20 @@ const NewItem = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     e.preventDefault();
     console.log(timeStamps);
-    const postTime = postTimeStamp.mutate({
+    const postTime = postTimeStamp.mutateAsync({
       // @ts-ignore
       date: typeof timeStamps.date.startDate === "string" ? timeStamps.date.startDate : timeStamps.date.startDate.toISOString(),
       time: Number(timeStamps.time) as unknown as number,
       type: timeStamps.type,
       note: timeStamps.note,
     })
-    window.location.href = `/dashboard/${session?.user.id || "404"}`
+    .then(()=> {
+      console.log("success")
+      window.location.href = `/dashboard/${session?.user.id || "404"}`
+    })
+    .catch((err) => {
+      alert(err)
+    })
 
   };
 
