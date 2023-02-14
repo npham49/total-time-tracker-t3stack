@@ -24,14 +24,12 @@ const NewItem = () => {
     console.log(timeStamps);
     const postTime = postTimeStamp.mutate({
       // @ts-ignore
-      date: typeof timeStamps.date.startDate === "string" ? timeStamps.date.startDate : timeStamps.date.startDate.toISOString().split("T")[0],
+      date: typeof timeStamps.date.startDate === "string" ? timeStamps.date.startDate : timeStamps.date.startDate.toISOString(),
       time: Number(timeStamps.time) as unknown as number,
       type: timeStamps.type,
       note: timeStamps.note,
     })
-    if (postTimeStamp.isSuccess) {
-      window.location.href = `/dashboard/${session?.user.id || "404"}`
-    }
+    window.location.href = `/dashboard/${session?.user.id || "404"}`
 
   };
 
