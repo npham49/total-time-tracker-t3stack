@@ -4,6 +4,7 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import Datepicker from "react-tailwindcss-datepicker";
 import { api } from "../../../utils/api";
+import { useRouter } from "next/router";
 
 const NewItem = () => {
   const { data: session } = useSession();

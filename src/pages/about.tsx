@@ -2,7 +2,7 @@ import React from "react";
 
 const about = () => {
   return (
-    <section className="dark:bg-gray-800 dark:text-gray-100">
+    <section className="dark:bg-gray-800 dark:text-gray-100 container">
       <div className="container mx-auto flex flex-col justify-center p-4 md:p-8">
         <p className="p-2 text-center text-sm font-medium uppercase tracking-wider">
           About
@@ -14,37 +14,16 @@ const about = () => {
           <div>
             <h3 className="font-semibold">Purpose of this website</h3>
             <p className="mt-1 dark:text-gray-400">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione,
-              fugit? Aspernatur, ullam enim, odit eaque quia rerum ipsum
-              voluptatem consequatur ratione, doloremque debitis? Fuga labore
-              omnis minima, quisquam delectus culpa!
+              This website is designed to track total time spent on an item,
+              a good example would be a project. You can track how long you have spent on a project.
+              You can also share your time sheet with someone else.
             </p>
           </div>
           <div>
-            <h3 className="font-semibold">Lorem ipsum dolor sit amet.</h3>
+            <h3 className="font-semibold">Sharing function</h3>
             <p className="mt-1 dark:text-gray-400">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione,
-              fugit? Aspernatur, ullam enim, odit eaque quia rerum ipsum
-              voluptatem consequatur ratione, doloremque debitis? Fuga labore
-              omnis minima, quisquam delectus culpa!
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold">Lorem ipsum dolor sit amet.</h3>
-            <p className="mt-1 dark:text-gray-400">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione,
-              fugit? Aspernatur, ullam enim, odit eaque quia rerum ipsum
-              voluptatem consequatur ratione, doloremque debitis? Fuga labore
-              omnis minima, quisquam delectus culpa!
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold">Lorem ipsum dolor sit amet.</h3>
-            <p className="mt-1 dark:text-gray-400">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione,
-              fugit? Aspernatur, ullam enim, odit eaque quia rerum ipsum
-              voluptatem consequatur ratione, doloremque debitis? Fuga labore
-              omnis minima, quisquam delectus culpa!
+              You can share your time sheet with someone else. You can share it with a friend, a colleague or a client.
+              This function would be helpful during charging for a project.
             </p>
           </div>
         </div>

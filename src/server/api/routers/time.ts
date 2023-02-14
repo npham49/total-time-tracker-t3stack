@@ -7,7 +7,7 @@
 import { PrismaClient} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const timeRouter = createTRPCRouter({
   postTime: protectedProcedure.input(
@@ -48,6 +48,38 @@ export const timeRouter = createTRPCRouter({
       const time = await ctx.prisma.timeStamp.findMany({
         where: {
           userId: userId,
+        },
+        orderBy: {
+          date: "desc",
+        },
+      });
+      return time;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
+      });
+    }
+  }),
+  getTimePublic: publicProcedure
+  .input(z.object({
+    userId: z.string(),
+  })).query(async ({ input, ctx }) => {
+    try {
+      const userAllowed = await ctx.prisma.shared.findMany({
+        where: {
+          userId: input.userId,
+        },
+      });
+      if (userAllowed.length === 0) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to view this timesheet",
+        });
+      }
+      const time = await ctx.prisma.timeStamp.findMany({
+        where: {
+          userId: input.userId,
         },
         orderBy: {
           date: "desc",

@@ -56,6 +56,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   TimeStamp     TimeStamp[]
+  Shared        Shared[]
 }
 
 model VerificationToken {
@@ -76,4 +77,12 @@ model TimeStamp {
   date      DateTime
   type      String
   note      String
+}
+
+model Shared {
+  id       String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
