@@ -40,6 +40,7 @@ const Dashboard = () => {
     const result = confirm("Are you sure you want to delete this time stamp?");
     if (result) {
       deleteTimeStamp.mutate({ id: id });
+      window.location.reload();
     }
   };
   const shareHandler = () => {
