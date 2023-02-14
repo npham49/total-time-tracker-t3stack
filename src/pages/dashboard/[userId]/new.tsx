@@ -24,7 +24,7 @@ const NewItem = () => {
     console.log(timeStamps);
     const postTime = postTimeStamp.mutate({
       // @ts-ignore
-      date: timeStamps.date.startDate,
+      date: typeof timeStamps.date.startDate === "string" ? timeStamps.date.startDate : timeStamps.date.startDate.toISOString(),
       time: Number(timeStamps.time) as unknown as number,
       type: timeStamps.type,
       note: timeStamps.note,
