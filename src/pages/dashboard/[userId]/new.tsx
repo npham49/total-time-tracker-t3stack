@@ -22,14 +22,17 @@ const NewItem = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     e.preventDefault();
     console.log(timeStamps);
-    postTimeStamp.mutate({
+    const postTime = postTimeStamp.mutate({
       // @ts-ignore
       date: timeStamps.date.startDate,
       time: Number(timeStamps.time) as unknown as number,
       type: timeStamps.type,
       note: timeStamps.note,
     })
-    window.location.href = `/dashboard/${session?.user.id || "404"}`
+    if (postTimeStamp.isSuccess) {
+      window.location.href = `/dashboard/${session?.user.id || "404"}`
+    }
+
   };
 
   return (
