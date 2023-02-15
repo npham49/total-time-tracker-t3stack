@@ -20,6 +20,9 @@ const Dashboard = () => {
   const { data: shared, isLoading: sharedIsLoading } = api.shared.getShared.useQuery();
   api.time.getTime.useQuery({page: page},{
     onSuccess: (data) => {
+      if(data[0]?.id === timeStamps[0]?.id) {
+        return;
+      }
       setTimeStamps(timeStamps.concat(data));
       if (data.length < 10) {
         setShowLoadButton(false);

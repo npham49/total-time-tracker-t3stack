@@ -14,6 +14,9 @@ const Shared = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   api.time.getTimePublic.useQuery({userId: shared ? shared[0]?.userId as string : "",page: page},{
     onSuccess: (data) => {
+      if(data[0]?.id === sharedTime[0]?.id) {
+        return;
+      }
       setSharedTime(sharedTime.concat(data));
       if (data.length < 10) {
         setShowLoadButton(false);
