@@ -13,7 +13,7 @@ export const timeRouter = createTRPCRouter({
   postTime: protectedProcedure.input(
     z.object({
       time: z.number(),
-      date: z.string(),
+      date: z.date(),
       type: z.string(),
       note: z.string(),
     }),
@@ -23,9 +23,6 @@ export const timeRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
       //if the date is string then convert to date object
       const date = typeof input.date === "string" ? new Date(input.date) : input.date;
-      if (typeof input.date === "string") {
-        const date= new Date(input.date);
-      }
       await ctx.prisma.timeStamp.create({
         data: {
           time: input.time,

@@ -50,24 +50,28 @@ const Dashboard = () => {
     }
   };
   const shareHandler = () => {
-    const sharedArray = postShared.mutate({ userId: session?.user.id || ''});
-    alert("Timesheet is now shared");
-    window.location.reload();
-    if (userId !== currentUserId) {
-      return (
-        <div className="container">
-          <h1>Not Authorized</h1>
-        </div>
-      );
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    if (!session) {
-      return (
-        <div className="container">
-          <h1>Not Authorized</h1>
-        </div>
-      );
-    }
+    postShared.mutate({ userId: session?.user.id || ''},
+    {
+      onSuccess: () => {
+        alert("Timesheet is now shared");
+        window.location.reload();
+      },
+    });
+  }
+  if (userId !== currentUserId) {
+    return (
+      <div className="container">
+        <h1>Not Authorized</h1>
+      </div>
+    );
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  if (!session) {
+    return (
+      <div className="container">
+        <h1>Not Authorized</h1>
+      </div>
+    );
   }
   const timeConverter = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
@@ -133,7 +137,7 @@ const Dashboard = () => {
             timeStamps.map((timeStamp: TimeStamp) => (
               <li key={timeStamp.id} className="flex items-start space-x-3">
                 <p className="flex h-8 max-w-[100px] items-center text-sm">
-                  {String(timeStamp.date.toDateString())}
+                  {timeStamp.date && String(timeStamp.date.toString().substring(0,15))}
                 </p>
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center justify-between space-x-4 dark:text-gray-400">

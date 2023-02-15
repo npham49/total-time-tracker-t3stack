@@ -22,9 +22,8 @@ const NewItem = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     e.preventDefault();
     console.log(timeStamps);
-    const postTime = postTimeStamp.mutateAsync({
-      // @ts-ignore
-      date: typeof timeStamps.date.startDate === "string" ? timeStamps.date.startDate : timeStamps.date.startDate.toISOString(),
+    postTimeStamp.mutateAsync({
+      date: typeof timeStamps.date.startDate === "string" ? new Date(timeStamps.date.startDate) : timeStamps.date.startDate,
       time: Number(timeStamps.time) as unknown as number,
       type: timeStamps.type,
       note: timeStamps.note,
