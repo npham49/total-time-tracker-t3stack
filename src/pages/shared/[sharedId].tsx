@@ -5,11 +5,27 @@ import { TimeStamp } from '@prisma/client';
 
 const Shared = () => {
   const router = useRouter();
+  const [page, setPage] = React.useState(0);
+  const [sharedTime, setSharedTime] = React.useState<TimeStamp[]>([]);
+  const [showLoadButton, setShowLoadButton] = React.useState(true);
   const { sharedId } = router.query  || "";
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {data:shared, isLoading:sharedIsLoading} = api.shared.getSharedPublic.useQuery({id: sharedId as string});
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const {data:sharedTime, isLoading} = api.time.getTimePublic.useQuery({userId: shared ? shared[0]?.userId as string : ""});
+  api.time.getTimePublic.useQuery({userId: shared ? shared[0]?.userId as string : "",page: page},{
+    onSuccess: (data) => {
+      setSharedTime(sharedTime.concat(data));
+      if (data.length < 10) {
+        setShowLoadButton(false);
+      }
+    },
+    onError: (err) => {
+      alert(err);
+    }
+  });
+  const loadMore = () => {
+    setPage(page + 1);
+  };
   if (shared) {
     console.log(sharedTime);
   }
@@ -33,9 +49,7 @@ const Shared = () => {
           <b className="text-white">
             Total time spent:{" "}
             {timeConverter(
-              sharedTime
-                ?.map((time) => time.time)
-                .reduce((prev, next) => prev + next) || 0
+              sharedTime && sharedTime.length>0 ? sharedTime?.map((time) => time.time).reduce((prev, next) => prev + next) : 0
             )}
           </b>
         </p>
@@ -52,7 +66,6 @@ const Shared = () => {
             </div>
             <span className="whitespace-nowrap">Time</span>
           </li>
-          {isLoading && <p>Loading...</p>}
           {sharedTime &&
             sharedTime.map((timeStamp: TimeStamp) => (
               <li key={timeStamp.id} className="flex items-start space-x-3">
@@ -82,6 +95,7 @@ const Shared = () => {
                 </div>
               </li>
             ))}
+          {showLoadButton && (<button role={"button"} onClick={loadMore}>Load More</button>)}
         </ul>
       </div>
     </div>

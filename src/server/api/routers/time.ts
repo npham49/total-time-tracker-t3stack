@@ -39,10 +39,35 @@ export const timeRouter = createTRPCRouter({
       });
     }
   }),
-  getTime: protectedProcedure.query(async ({ ctx }) => {
+  getTime: protectedProcedure
+  .input(
+    z.object({
+      page: z.number(),
+    }),
+  )
+  .query(async ({ input, ctx }) => {
     try {
       const userId = ctx.session.user.id;
+      if (input.page < 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Page number cannot be less than 0",
+        });
+      }
+      const timetotal = await ctx.prisma.timeStamp.count({
+        where: {
+          userId: userId,
+        },
+      });
+      if (input.page * 10 > timetotal) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Page number is too high",
+        });
+      }
       const time = await ctx.prisma.timeStamp.findMany({
+        skip: 10 * (input.page),
+        take: 10,
         where: {
           userId: userId,
         },
@@ -61,8 +86,26 @@ export const timeRouter = createTRPCRouter({
   getTimePublic: publicProcedure
   .input(z.object({
     userId: z.string(),
+    page: z.number(),
   })).query(async ({ input, ctx }) => {
     try {
+      if (input.page < 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Page number cannot be less than 0",
+        });
+      }
+      const timetotal = await ctx.prisma.timeStamp.count({
+        where: {
+          userId: input.userId,
+        },
+      });
+      if (input.page * 10 > timetotal) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Page number is too high",
+        });
+      }
       const userAllowed = await ctx.prisma.shared.findMany({
         where: {
           userId: input.userId,
@@ -75,6 +118,8 @@ export const timeRouter = createTRPCRouter({
         });
       }
       const time = await ctx.prisma.timeStamp.findMany({
+        skip: 10 * (input.page),
+        take: 10,
         where: {
           userId: input.userId,
         },

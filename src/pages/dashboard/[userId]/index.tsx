@@ -8,6 +8,9 @@ import type { TimeStamp } from "@prisma/client";
 import { useRouter } from "next/router";
 
 const Dashboard = () => {
+  const [page, setPage] = React.useState(0);
+  const [timeStamps, setTimeStamps] = React.useState<TimeStamp[]>([]);
+  const [showLoadButton, setShowLoadButton] = React.useState(true);
   const { data: session } = useSession();
   const router = useRouter();
   const { userId } = router.query;
@@ -15,14 +18,27 @@ const Dashboard = () => {
 
   // convert minutes to hours and minutes
   const { data: shared, isLoading: sharedIsLoading } = api.shared.getShared.useQuery();
-  const { data: timeStamps, isLoading } = api.time.getTime.useQuery();
+  api.time.getTime.useQuery({page: page},{
+    onSuccess: (data) => {
+      setTimeStamps(timeStamps.concat(data));
+      if (data.length < 10) {
+        setShowLoadButton(false);
+      }
+    },
+    onError: (err) => {
+      alert(err);
+    }
+  });
+  const loadMore = () => {
+    setPage(page + 1);
+  };
   const postShared = api.shared.postShared.useMutation();
   const utils = api.useContext();
   const deleteTimeStamp = api.time.deleteTime.useMutation(
     {
       onMutate: async (newEntry) => {
         await utils.time.getTime.cancel();
-        utils.time.getTime.setData(undefined, (prevEntries: any) => {
+        utils.time.getTime.setData({page:page}, (prevEntries: any) => {
           if (prevEntries) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return [newEntry, ...prevEntries];
@@ -55,6 +71,7 @@ const Dashboard = () => {
       onSuccess: () => {
         alert("Timesheet is now shared");
         window.location.reload();
+        
       },
     });
   }
@@ -132,7 +149,6 @@ const Dashboard = () => {
             </div>
             <span className="whitespace-nowrap">Time</span>
           </li>
-          {isLoading && <p>Loading...</p>}
           {timeStamps &&
             timeStamps.map((timeStamp: TimeStamp) => (
               <li key={timeStamp.id} className="flex items-start space-x-3">
@@ -169,6 +185,7 @@ const Dashboard = () => {
                 </div>
               </li>
             ))}
+            {showLoadButton && (<button role={"button"} onClick={loadMore}>Load More</button>)}
         </ul>
       </div>
     </div>
