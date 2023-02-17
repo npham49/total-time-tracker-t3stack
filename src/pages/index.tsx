@@ -29,7 +29,7 @@ const Home: NextPage = () => {
                   className="m-2 rounded px-8 py-3 text-lg font-semibold"
                   role="button"
                   onClick={() => {
-                    void router.push("/dashboard");
+                    void router.push(`/dashboard/${session.user.id}`);
                   }}
                 >
                   Dashboard
